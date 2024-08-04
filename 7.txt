@@ -1,0 +1,43 @@
+import matplotlib.pyplot as plt 
+import pandas as pd
+from sklearn.datasets import load_iris
+from sklearn.cluster import KMeans 
+from sklearn.preprocessing import StandardScaler
+from sklearn.mixture import GaussianMixture
+import sklearn.metrics as sm
+
+iris = load_iris()
+X = pd.DataFrame(iris.data, columns=['Sepal_Length', 'Sepal_Width', 'Petal_Length', 'Petal_Width'])
+y = pd.DataFrame(iris.target, columns=['Targets'])
+
+km = KMeans(n_clusters=3, random_state=0)
+km.fit(X)
+kmeans_labels = km.labels_
+
+plt.figure(figsize=(21, 7))
+plt.subplot(1, 3, 2)
+plt.scatter(X['Petal_Length'], X['Petal_Width'], c=kmeans_labels, cmap='viridis', s=40) 
+plt.title('K-Means Clustering')
+plt.xlabel('Petal Length') 
+plt.ylabel('Petal Width')
+
+scaler = StandardScaler() 
+scaler.fit(X)
+X_scaler = scaler.transform(X)
+
+gmm = GaussianMixture(n_components=3, random_state=0)
+gmm.fit(X_scaler)
+gmm_labels = gmm.predict(X_scaler)
+
+plt.subplot(1, 3, 3)
+plt.scatter(X['Petal_Length'], X['Petal_Width'], c=gmm_labels, cmap='viridis', s=40) 
+plt.title('GMM Clustering')
+plt.xlabel('Petal Length') 
+plt.ylabel('Petal Width')
+
+plt.show()
+
+print("Kmeanss accuracy: ",sm.accuracy_score(y,kmeans_labels))
+print("Kmeans Confusion Matrix: ",sm.confusion_matrix(y,kmeans_labels))
+print("GMM accuracy: ",sm.accuracy_score(y,gmm_labels))
+print("GMM Confusion Matrix: ",sm.confusion_matrix(y,gmm_labels))
