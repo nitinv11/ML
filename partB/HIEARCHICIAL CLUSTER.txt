@@ -1,0 +1,17 @@
+import numpy as np
+import matplotlib.pyplot as plt
+from scipy.cluster.hierarchy import dendrogram, linkage
+from scipy.cluster.hierarchy import fcluster
+
+
+np.random.seed(42)
+X = np.random.rand(10, 2)
+
+Z = linkage(X, method='ward')
+
+plt.figure(figsize=(10, 7))
+dendrogram(Z)
+plt.title('Dendrogram for Hierarchical Clustering')
+plt.xlabel('Data Points')
+plt.ylabel('Euclidean Distance')
+plt.show()
